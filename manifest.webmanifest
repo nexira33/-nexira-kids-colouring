@@ -1,0 +1,9 @@
+{
+  "name": "NEXIRA Digital Kids Colouring Studio",
+  "short_name": "NEXIRA Colour",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff7ef",
+  "theme_color": "#fff7ef",
+  "description": "A playful colouring studio for little creators."
+}

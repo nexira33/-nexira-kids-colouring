@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff7ef">
+<meta name="description" content="NEXIRA Digital Kids Colouring Studio">
+<link rel="manifest" href="manifest.webmanifest">
+<title>NEXIRA Digital | Kids Colouring Studio</title>
+<style>
+:root{--ink:#29233a;--muted:#716b7d;--pink:#ffe2e8;--cream:#fff7ef;--purple:#eee7ff;--green:#e5f5e9;--line:#eee8e4}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:18px 18px 14px;background:linear-gradient(120deg,#fff4e9,#f5edff);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:2px;font-size:20px}.brand span{color:#8a65c8}.tag{font-size:12px;color:var(--muted);margin-top:3px}
+main{max-width:1000px;margin:auto;padding:18px 14px 40px}.hero{padding:20px;border-radius:22px;background:var(--cream);margin-bottom:18px}.hero h1{font-size:clamp(24px,6vw,36px);margin:0 0 7px}.hero p{margin:0;color:var(--muted);line-height:1.5}
+.pills{display:flex;gap:8px;overflow:auto;padding:4px 0 14px}.pill{border:1px solid var(--line);background:white;border-radius:99px;padding:9px 14px;white-space:nowrap;font-weight:650;color:var(--ink)}.pill.active{background:var(--purple);border-color:#d7c7ff}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:18px;padding:10px;background:white;box-shadow:0 3px 12px #30204008}
+.thumb{width:100%;aspect-ratio:1.15;background:#fffaf6;border-radius:12px;display:grid;place-items:center;overflow:hidden}.thumb svg{width:92%;height:92%}
+.card h3{font-size:14px;margin:9px 0 3px}.card small{color:var(--muted)}
+button{font:inherit;cursor:pointer}.open{margin-top:9px;width:100%;border:0;border-radius:12px;padding:10px;background:#29233a;color:white;font-weight:700}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 12px}.section-title h2{font-size:19px;margin:0}
+#studio{display:none}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tool{border:1px solid var(--line);background:white;border-radius:11px;padding:9px 12px;font-weight:650}.tool.selected{background:var(--purple);border-color:#c9b5ff}
+.canvas-wrap{background:#fffaf6;border:1px solid var(--line);border-radius:18px;padding:8px;touch-action:none}
+#paint{display:block;width:100%;height:auto;max-height:65vh;touch-action:none;background:white;border-radius:12px}
+.colors{display:flex;gap:9px;overflow:auto;padding:12px 2px}.swatch{width:34px;height:34px;flex:0 0 34px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1px #ddd}.swatch.active{box-shadow:0 0 0 3px #8a65c8}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:12px 2px}.back{border:0;background:transparent;color:#6d4aa7;font-weight:750;padding:4px 0 10px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:22px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:28px}.card{padding:13px}}
+</style>
+</head>
+<body>
+<header><div class="brand">NEXIRA <span>DIGITAL</span></div><div class="tag">KIDS COLOURING STUDIO</div></header>
+<main>
+<section id="library">
+ <div class="hero"><h1>Little artists, big imagination! 🎨</h1><p>Choose a picture, pick your favourite colours and create something wonderful.</p></div>
+ <div class="section-title"><h2>Explore colouring pages</h2><span style="font-size:12px;color:var(--muted)">30 free pages</span></div>
+ <div class="pills" id="filters">
+  <button class="pill active" data-cat="All">All</button><button class="pill" data-cat="Animals">Animals</button><button class="pill" data-cat="Vehicles">Vehicles</button><button class="pill" data-cat="Nature">Nature</button><button class="pill" data-cat="Space">Space</button>
+ </div>
+ <div class="grid" id="cards"></div>
+ <div class="section-title" style="margin-top:28px"><h2>Coming soon · Premium books ⭐</h2><span style="font-size:12px;color:var(--muted)">Preview</span></div>
+ <div class="grid" id="premium">
+  <article class="card"><div class="thumb"><div style="font-size:58px">🏎️</div></div><h3>Supercars Collection</h3><small>Premium · Coming soon</small><button class="open" disabled style="opacity:.55">Coming soon</button></article>
+  <article class="card"><div class="thumb"><div style="font-size:58px">🦕</div></div><h3>Dinosaur World</h3><small>Premium · Coming soon</small><button class="open" disabled style="opacity:.55">Coming soon</button></article>
+  <article class="card"><div class="thumb"><div style="font-size:58px">🧚</div></div><h3>Fantasy & Fairytales</h3><small>Premium · Coming soon</small><button class="open" disabled style="opacity:.55">Coming soon</button></article>
+ </div>
+ <p class="note">Premium collections are previews only. Payments and advertising are not connected yet. We’ll add those only after the colouring experience is tested.</p>
+</section>
+<section id="studio">
+ <button class="back" id="back">← Back to pages</button>
+ <div class="section-title"><h2 id="pageTitle">Colour your picture</h2><span style="font-size:12px;color:var(--muted)">Have fun!</span></div>
+ <div class="canvas-wrap"><canvas id="paint" width="900" height="760" aria-label="Colouring canvas"></canvas></div>
+ <div class="colors" id="colors"></div>
+ <div class="toolbar">
+  <button class="tool selected" id="brush">🖌 Brush</button><button class="tool" id="eraser">Eraser</button>
+  <button class="tool" id="undo">Undo</button><button class="tool" id="clear">Clear</button>
+  <button class="tool" id="save">Save picture</button>
+ </div>
+ <label style="font-size:13px;font-weight:650">Brush size <input id="size" type="range" min="4" max="42" value="18" style="vertical-align:middle"></label>
+ <p class="note">Tip: Use your finger or a stylus to colour. “Save picture” downloads your artwork to your device.</p>
+</section>
+</main>
+<footer>© NEXIRA Digital · Made for little creators</footer>
+<script>
+const pages=[
+ {name:"Happy Cat",cat:"Animals",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"><path d="M105 120 L95 35 L165 82 Q200 65 235 82 L305 35 L295 120 Q330 170 300 235 Q270 300 200 300 Q130 300 100 235 Q70 170 105 120Z"/><path d="M145 165 Q160 180 175 165 M225 165 Q240 180 255 165"/><path d="M185 200 L200 212 L215 200Z"/><path d="M200 212 Q180 235 160 218 M200 212 Q220 235 240 218"/><path d="M105 205 L35 190 M105 225 L35 235 M295 205 L365 190 M295 225 L365 235"/><path d="M155 285 Q150 320 120 315 M245 285 Q250 320 280 315"/></g></svg>`},
+ {name:"Dino Friend",cat:"Animals",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7" stroke-linejoin="round"><path d="M75 250 Q55 180 105 135 L115 75 L155 112 L185 55 L220 112 L255 75 L275 140 Q340 165 325 235 L290 260 L280 300 L235 300 L225 265 L155 265 L145 300 L100 300 L110 255Z"/><path d="M275 165 Q305 145 325 165"/><circle cx="270" cy="190" r="7"/><path d="M290 215 Q310 230 325 215 M150 250 L150 280 M220 250 L220 280"/></g></svg>`},
+ {name:"Butterfly",cat:"Nature",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7"><path d="M195 160 Q90 10 45 100 Q10 190 175 205 Q35 280 105 310 Q175 330 200 220 Q225 330 295 310 Q365 280 225 205 Q390 190 355 100 Q310 10 205 160Z"/><path d="M200 100 Q165 45 145 40 M205 100 Q235 45 255 40"/><path d="M200 130 L200 275"/><circle cx="105" cy="135" r="24"/><circle cx="295" cy="135" r="24"/><circle cx="125" cy="250" r="18"/><circle cx="275" cy="250" r="18"/></g></svg>`},
+ {name:"Little Car",cat:"Vehicles",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7" stroke-linejoin="round"><path d="M55 210 L80 150 Q95 125 130 125 L175 75 L265 75 L315 145 L345 160 L355 235 L45 235Z"/><path d="M145 125 L180 90 L250 90 L285 145Z"/><circle cx="115" cy="235" r="33"/><circle cx="285" cy="235" r="33"/><path d="M50 190 L85 190 M320 180 L350 180"/></g></svg>`},
+ {name:"Rocket Ship",cat:"Space",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7" stroke-linejoin="round"><path d="M200 35 Q285 105 260 235 L200 280 L140 235 Q115 105 200 35Z"/><circle cx="200" cy="145" r="32"/><path d="M140 190 L75 250 L145 255 M260 190 L325 250 L255 255"/><path d="M170 270 L165 315 L200 290 L235 315 L230 270"/><path d="M90 65 L90 95 M75 80 L105 80 M320 80 L320 110 M305 95 L335 95"/></g></svg>`},
+ {name:"Sunflower",cat:"Nature",svg:`<svg viewBox="0 0 400 330"><g fill="white" stroke="#222" stroke-width="7"><g transform="translate(200 140)"><ellipse cy="-78" ry="42" rx="24"/><ellipse cy="78" ry="42" rx="24"/><ellipse cx="-78" rx="42" ry="24"/><ellipse cx="78" rx="42" ry="24"/><ellipse cx="-55" cy="-55" rx="24" ry="42" transform="rotate(-45 -55 -55)"/><ellipse cx="55" cy="-55" rx="24" ry="42" transform="rotate(45 55 -55)"/><ellipse cx="-55" cy="55" rx="24" ry="42" transform="rotate(45 -55 55)"/><ellipse cx="55" cy="55" rx="24" ry="42" transform="rotate(-45 55 55)"/><circle r="48"/></g><path d="M200 190 L200 315 M200 260 Q130 210 115 270 Q160 300 200 275 M200 285 Q265 220 290 275 Q250 315 200 300"/></g></svg>`},
+ {"name": "Lion Cub", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><circle cx=\"200\" cy=\"165\" r=\"105\"/><circle cx=\"200\" cy=\"165\" r=\"70\"/><path d=\"M155 145q15-15 30 0 M215 145q15-15 30 0 M185 180l15 15 15-15 M200 195q-25 25-45 0 M200 195q25 25 45 0 M95 110l-35-35 M305 110l35-35 M95 220l-35 35 M305 220l35 35\"/></g></svg>"},
+ {"name": "Little Elephant", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M105 215q-25-110 65-135h65q85 25 60 135q-10 45-55 45h-75q-50 0-60-45z\"/><path d=\"M110 155q-75-35-70 35q5 65 70 25 M160 155h8 M230 155h8 M185 190q15 12 30 0 M145 260v35h35v-35 M225 260v35h35v-35\"/></g></svg>"},
+ {"name": "Friendly Turtle", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><ellipse cx=\"200\" cy=\"185\" rx=\"115\" ry=\"75\"/><path d=\"M110 160l-35-35 M135 235l-25 40 M265 235l25 40 M290 160l35-35\"/><circle cx=\"325\" cy=\"175\" r=\"35\"/><circle cx=\"335\" cy=\"165\" r=\"5\"/><path d=\"M120 185l80-75 80 75-80 55z M200 110v130 M120 185h160\"/></g></svg>"},
+ {"name": "Little Rabbit", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><ellipse cx=\"160\" cy=\"85\" rx=\"35\" ry=\"75\" transform=\"rotate(-15 160 85)\"/><ellipse cx=\"240\" cy=\"85\" rx=\"35\" ry=\"75\" transform=\"rotate(15 240 85)\"/><circle cx=\"200\" cy=\"205\" r=\"95\"/><circle cx=\"165\" cy=\"190\" r=\"6\"/><circle cx=\"235\" cy=\"190\" r=\"6\"/><path d=\"M190 215l10 10 10-10 M200 225q-20 20-35 0 M200 225q20 20 35 0\"/></g></svg>"},
+ {"name": "Puppy Pal", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M105 135q-65-80-65 10q0 65 65 55 M295 135q65-80 65 10q0 65-65 55\"/><circle cx=\"200\" cy=\"180\" r=\"105\"/><circle cx=\"165\" cy=\"165\" r=\"7\"/><circle cx=\"235\" cy=\"165\" r=\"7\"/><ellipse cx=\"200\" cy=\"205\" rx=\"25\" ry=\"18\"/><path d=\"M200 223q-20 25-40 5 M200 223q20 25 40 5\"/></g></svg>"},
+ {"name": "Fishy Friend", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M75 165q120-125 245 0Q195 290 75 165z M75 165L25 105v120z\"/><circle cx=\"260\" cy=\"150\" r=\"9\"/><path d=\"M155 105q45 60 0 120 M185 150q25 15 0 30\"/></g></svg>"},
+ {"name": "Big Dinosaur", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M75 240q-10-85 60-105l25-65 45 45 35-55 35 70q65 20 65 90v45h-55l-20-35h-90l-20 35h-55z\"/><circle cx=\"270\" cy=\"165\" r=\"7\"/><path d=\"M295 190q20 15 35 0 M130 235v45 M240 235v45\"/></g></svg>"},
+ {"name": "Sailboat", "cat": "Vehicles", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M70 245h260l-35 45H110z M195 65v180 M195 75l-95 120h95z M210 95l95 100h-95z M50 305q35-20 70 0t70 0t70 0t70 0\"/></g></svg>"},
+ {"name": "Airplane", "cat": "Vehicles", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M200 35l30 115 120 55v35l-125-25-15 75 45 30v20l-55-15-55 15v-20l45-30-15-75-125 25v-35l120-55z\"/></g></svg>"},
+ {"name": "Tractor", "cat": "Vehicles", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M80 210h210v-75h-90v-55h-65v130H80z M290 175h45v65h-45z\"/><circle cx=\"125\" cy=\"245\" r=\"45\"/><circle cx=\"295\" cy=\"250\" r=\"30\"/><path d=\"M135 80h65v55h-65z\"/></g></svg>"},
+ {"name": "Train", "cat": "Vehicles", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M75 100h210q35 0 35 35v110H75z M320 180h40v65h-40z\"/><rect x=\"105\" y=\"130\" width=\"55\" height=\"50\"/><rect x=\"185\" y=\"130\" width=\"55\" height=\"50\"/><circle cx=\"135\" cy=\"255\" r=\"28\"/><circle cx=\"270\" cy=\"255\" r=\"28\"/><path d=\"M95 290h220\"/></g></svg>"},
+ {"name": "Bicycle", "cat": "Vehicles", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><circle cx=\"100\" cy=\"230\" r=\"65\"/><circle cx=\"300\" cy=\"230\" r=\"65\"/><path d=\"M100 230l65-100 65 100H100l55-85h90l55 85 M150 115h35 M220 105h35\"/></g></svg>"},
+ {"name": "Hot Air Balloon", "cat": "Nature", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M200 35q-115 0-105 120q5 65 105 115q100-50 105-115Q315 35 200 35z M150 250l-15 35h130l-15-35 M175 285v25h50v-25 M200 45v190 M110 145h180\"/></g></svg>"},
+ {"name": "Rainbow", "cat": "Nature", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M55 270a145 145 0 0 1 290 0 M85 270a115 115 0 0 1 230 0 M115 270a85 85 0 0 1 170 0 M145 270a55 55 0 0 1 110 0 M55 270h290\"/></g></svg>"},
+ {"name": "Pretty Flower", "cat": "Nature", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><g><ellipse cx=\"200\" cy=\"95\" rx=\"35\" ry=\"65\"/><ellipse cx=\"200\" cy=\"235\" rx=\"35\" ry=\"65\"/><ellipse cx=\"130\" cy=\"165\" rx=\"65\" ry=\"35\"/><ellipse cx=\"270\" cy=\"165\" rx=\"65\" ry=\"35\"/><circle cx=\"200\" cy=\"165\" r=\"45\"/><path d=\"M200 280v35 M200 300q-55-45-75 0q40 35 75 0 M200 300q55-45 75 0q-40 35-75 0\"/></g></g></svg>"},
+ {"name": "Apple Tree", "cat": "Nature", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M170 180h60v135h-60z\"/><circle cx=\"200\" cy=\"115\" r=\"85\"/><circle cx=\"130\" cy=\"145\" r=\"55\"/><circle cx=\"270\" cy=\"145\" r=\"55\"/><circle cx=\"160\" cy=\"125\" r=\"13\"/><circle cx=\"235\" cy=\"95\" r=\"13\"/><circle cx=\"225\" cy=\"165\" r=\"13\"/></g></svg>"},
+ {"name": "Crescent Moon", "cat": "Space", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M260 55a125 125 0 1 0 0 220a100 100 0 0 1 0-220z\"/><path d=\"M95 75v25 M82 87h26 M320 95v20 M310 105h20 M300 265v18 M291 274h18\"/><circle cx=\"125\" cy=\"65\" r=\"7\"/></g></svg>"},
+ {"name": "Saturn", "cat": "Space", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><ellipse cx=\"200\" cy=\"170\" rx=\"155\" ry=\"48\" transform=\"rotate(-18 200 170)\"/><circle cx=\"200\" cy=\"165\" r=\"75\"/><path d=\"M55 215q145-90 290-115\"/></g></svg>"},
+ {"name": "Astronaut", "cat": "Space", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><circle cx=\"200\" cy=\"120\" r=\"85\"/><rect x=\"130\" y=\"205\" width=\"140\" height=\"95\" rx=\"30\"/><ellipse cx=\"200\" cy=\"120\" rx=\"55\" ry=\"45\"/><path d=\"M145 240h-55v55h55 M255 240h55v55h-55 M165 300v25h-35 M235 300v25h35\"/></g></svg>"},
+ {"name": "Starry Sky", "cat": "Space", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M200 35l25 75 80 3-62 50 22 78-65-45-65 45 22-78-62-50 80-3z\"/><path d=\"M75 75l10 28 30 2-23 18 8 29-25-17-25 17 8-29-23-18 30-2z M320 215l10 25 27 2-21 16 7 27-23-16-23 16 8-27-22-16 28-2z\"/></g></svg>"},
+ {"name": "Castle", "cat": "Nature", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M65 285V120h65v40h35V95h70v65h35v-40h65v165z M65 120l32-35 33 35 M235 95l35-35 35 35 M175 285v-75q25-45 50 0v75 M95 190h25 M280 190h25\"/></g></svg>"},
+ {"name": "Dolphin", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M55 185q85-110 200-40l80-55-20 95q-35 95-145 75q-75-15-115-75z M160 155l-20-65 75 45 M195 220q-20 35-55 40\"/><circle cx=\"260\" cy=\"155\" r=\"7\"/></g></svg>"},
+ {"name": "Owl", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M95 275q-25-100 15-180l45 35q45-25 90 0l45-35q40 80 15 180q-105 65-210 0z\"/><circle cx=\"160\" cy=\"170\" r=\"38\"/><circle cx=\"240\" cy=\"170\" r=\"38\"/><circle cx=\"160\" cy=\"170\" r=\"8\"/><circle cx=\"240\" cy=\"170\" r=\"8\"/><path d=\"M185 215l15 20 15-20\"/></g></svg>"},
+ {"name": "Whale", "cat": "Animals", "svg": "<svg viewBox=\"0 0 400 330\"><g fill=\"white\" stroke=\"#222\" stroke-width=\"7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"><path d=\"M55 190q25-105 155-105q100 0 135 95q-35 100-145 100q-95 0-145-90z M345 180l35-40v80z M155 170h10 M245 170h10 M195 215q20 15 40 0 M170 85q-10-35 15-45 M200 85q-5-45 25-55\"/></g></svg>"}
+];
+const cards=document.getElementById('cards'),library=document.getElementById('library'),studio=document.getElementById('studio'),canvas=document.getElementById('paint'),ctx=canvas.getContext('2d');
+let current=null,colour='#ff5b7f',tool='brush',drawing=false,last=null,history=[];
+const palette=['#ff5b7f','#ff9f1c','#ffd23f','#72c472','#28b8a8','#4d9de0','#8067d8','#c77dba','#8b5e3c','#222222','#ffffff','#ffcfb3'];
+function renderCards(cat='All'){cards.innerHTML='';pages.filter(p=>cat==='All'||p.cat===cat).forEach((p,i)=>{let d=document.createElement('article');d.className='card';d.innerHTML=`<div class="thumb">${p.svg}</div><h3>${p.name}</h3><small>${p.cat} · Free</small><button class="open">Start colouring</button>`;d.querySelector('button').onclick=()=>openPage(p);cards.append(d)})}
+document.querySelectorAll('.pill').forEach(b=>b.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCards(b.dataset.cat)});
+function openPage(p){current=p;library.style.display='none';studio.style.display='block';document.getElementById('pageTitle').textContent=p.name;let img=new Image();let svg=new Blob([p.svg],{type:'image/svg+xml'});let url=URL.createObjectURL(svg);img.onload=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);let scale=Math.min(760/img.width,650/img.height);let w=img.width*scale,h=img.height*scale;ctx.drawImage(img,(900-w)/2,(760-h)/2,w,h);history=[];pushHistory();URL.revokeObjectURL(url)};img.src=url}
+function pushHistory(){try{history.push(ctx.getImageData(0,0,canvas.width,canvas.height));if(history.length>15)history.shift()}catch(e){}}
+function renderPalette(){let el=document.getElementById('colors');palette.forEach(c=>{let b=document.createElement('button');b.className='swatch'+(c===colour?' active':'');b.style.background=c;b.setAttribute('aria-label','Choose '+c);b.onclick=()=>{colour=c;renderPalette();setTool('brush')};el.append(b)})}
+function setTool(t){tool=t;document.getElementById('brush').classList.toggle('selected',t==='brush');document.getElementById('eraser').classList.toggle('selected',t==='eraser')}
+document.getElementById('brush').onclick=()=>setTool('brush');document.getElementById('eraser').onclick=()=>setTool('eraser');
+document.getElementById('undo').onclick=()=>{if(history.length>1){history.pop();ctx.putImageData(history[history.length-1],0,0)}};
+document.getElementById('clear').onclick=()=>{if(!current)return;openPage(current)};
+document.getElementById('save').onclick=()=>{let a=document.createElement('a');a.download='nexira-colouring.png';a.href=canvas.toDataURL('image/png');a.click()};
+document.getElementById('back').onclick=()=>{studio.style.display='none';library.style.display='block'};
+function point(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
+canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);last=point(e);ctx.beginPath();ctx.moveTo(last.x,last.y)});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;let p=point(e);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=Number(document.getElementById('size').value);ctx.strokeStyle=tool==='eraser'?'white':colour;ctx.lineTo(p.x,p.y);ctx.stroke();last=p});
+function endDraw(){if(drawing){drawing=false;pushHistory()}}canvas.addEventListener('pointerup',endDraw);canvas.addEventListener('pointercancel',endDraw);
+renderCards();renderPalette();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
