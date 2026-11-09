@@ -100,7 +100,22 @@ let current=null,colour='#ff5b7f',tool='brush',drawing=false,last=null,history=[
 const palette=['#ff5b7f','#ff9f1c','#ffd23f','#72c472','#28b8a8','#4d9de0','#8067d8','#c77dba','#8b5e3c','#222222','#ffffff','#ffcfb3'];
 function renderCards(cat='All'){cards.innerHTML='';pages.filter(p=>cat==='All'||p.cat===cat).forEach((p,i)=>{let d=document.createElement('article');d.className='card';d.innerHTML=`<div class="thumb">${p.svg}</div><h3>${p.name}</h3><small>${p.cat} · Free</small><button class="open">Start colouring</button>`;d.querySelector('button').onclick=()=>openPage(p);cards.append(d)})}
 document.querySelectorAll('.pill').forEach(b=>b.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCards(b.dataset.cat)});
-function openPage(p){current=p;library.style.display='none';studio.style.display='block';document.getElementById('pageTitle').textContent=p.name;let img=new Image();let svg=new Blob([p.svg],{type:'image/svg+xml'});let url=URL.createObjectURL(svg);img.onload=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);let scale=Math.min(760/img.width,650/img.height);let w=img.width*scale,h=img.height*scale;ctx.drawImage(img,(900-w)/2,(760-h)/2,w,h);history=[];pushHistory();URL.revokeObjectURL(url)};img.src=url}
+function openPage(p){
+ current=p;library.style.display='none';studio.style.display='block';document.getElementById('pageTitle').textContent=p.name;
+ // Give the SVG explicit dimensions and its XML namespace before loading it as an image.
+ // This avoids blank canvases in some mobile Safari/iOS browsers.
+ const svgText=p.svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="660" ');
+ const blob=new Blob([svgText],{type:'image/svg+xml;charset=utf-8'});
+ const url=URL.createObjectURL(blob);const img=new Image();
+ img.onload=()=>{
+   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+   const iw=img.naturalWidth||800,ih=img.naturalHeight||660;const scale=Math.min(760/iw,650/ih);
+   const w=iw*scale,h=ih*scale;ctx.drawImage(img,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
+   history=[];pushHistory();URL.revokeObjectURL(url);
+ };
+ img.onerror=()=>{URL.revokeObjectURL(url);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#222';ctx.font='28px sans-serif';ctx.fillText('This picture could not load. Please refresh.',35,canvas.height/2);};
+ img.src=url;
+}
 function pushHistory(){try{history.push(ctx.getImageData(0,0,canvas.width,canvas.height));if(history.length>15)history.shift()}catch(e){}}
 function renderPalette(){let el=document.getElementById('colors');palette.forEach(c=>{let b=document.createElement('button');b.className='swatch'+(c===colour?' active':'');b.style.background=c;b.setAttribute('aria-label','Choose '+c);b.onclick=()=>{colour=c;renderPalette();setTool('brush')};el.append(b)})}
 function setTool(t){tool=t;document.getElementById('brush').classList.toggle('selected',t==='brush');document.getElementById('eraser').classList.toggle('selected',t==='eraser')}
